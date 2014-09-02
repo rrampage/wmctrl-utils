@@ -19,4 +19,5 @@ You can add it to your $PATH or, if you have root privileges, copy to /usr/local
 ##Requires:
 - **wmctrl**
 - **xprop**
+- **xdotool** - A great tool for window and keyboard and mouse input automation
 - **An [EWMH](https://en.wikipedia.org/wiki/Extended_Window_Manager_Hints) compliant WM**

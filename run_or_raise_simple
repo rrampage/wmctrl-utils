@@ -1,0 +1,4 @@
+#!/bin/bash
+#From https://vickychijwani.github.io/2012/04/15/blazing-fast-application-switching-in-linux/
+#Changed so that 2 arguments are not necessary while invoking command.
+[ -z $2 ] && (wmctrl -x -a $1 || $1) || (wmctrl -x -a $1 || $2)

@@ -1,0 +1,46 @@
+#!/bin/bash
+#A Script written just for fun to switch between windows of the same application if more than 1 is running or to launch a new instance of that app if none are running
+#Takes two parameters, second is optional, is usually the application name invoked with custom arguments
+#Uses wmctrl and xprop
+#Assumes that your Window Manager is EWMH compliant
+#Useful for switching between normal and private browsing modes of Chrome and Firefox and sometimes annoying Auto-popups of the file manager due to flash drive mounting
+#TODO Use Title searches to switch between similarly titled windows
+#Most echo statements here are for debugging purposes
+
+#An array containing the Window IDs (WIDs) of the app class you want to switch to.
+#We use a case-insensitive grep because the Classnames of many apps are Capitalized whereas the command to launch them maybe in lowercase
+ARRAY1=(`wmctrl -x -l | grep -i $1 | cut -d' ' -f1`)
+#Number of windows of the app
+COUNT=${#ARRAY1[@]}
+echo "$COUNT windows of $1 open"
+
+#If more than 1 window open, we switch between the windows
+if [ $COUNT -gt 1 ]; then
+	#We get the WID of the current open window
+	CURRID=`xprop -root _NET_ACTIVE_WINDOW | cut -d, -f1 | cut -d' ' -f5`
+	#We check if the current window is an instance of the application we want to launch
+	#Due to a quirk of the xprop command whcih seems to cut the leading 0 in the WID (e.g 0x034... becomes 0x34..) we must only grab the relevant characters from wmctrl output
+	GREP_OP=$(wmctrl -x -l | grep -i $1 | cut -c1,2,4-10 | grep $CURRID | wc -l)
+	if (( $GREP_OP )); then
+		echo "Switching between open windows of $1"
+		#Activates next Window in array or first window if current window is last element of the array
+		for ((i=0; i<COUNT; i++)); do
+			echo "PID $i: '${ARRAY1[i]}'"
+			if ((${ARRAY1[i]} == $CURRID)); then
+				TMP=$(($(($i+1))%$COUNT))
+				wmctrl -i -a ${ARRAY1[$TMP]}
+				exit
+			fi
+		done
+	else
+		#Else, simply change focus to the oldest launched window of the app, done by default by "wmctrl -x -a"
+		#TODO: Can also show which app we switched from, but this is useful only for informational purposes
+		echo "Focus changed from some other app to $1"
+		wmctrl -x -a "$1"
+	fi
+
+#If 1 or 0 windows open, we simply activate the open window or launch a new one according to custom arguments if given
+else
+	echo "Second arg is $2"
+	[ -z $2 ] && (wmctrl -x -a $1 || $1) || (wmctrl -x -a $1 || $2)
+fi

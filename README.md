@@ -6,7 +6,10 @@ Shell-scripts that make use of the nifty **[wmctrl](http://tomas.styblo.name/wmc
 wmctrl is a rather under-appreciated commandline tool that allows you to control your running windows from the command-line.
 
 ### Window state toggling and Show Desktop
-Some WMs do not come with a toggle desktop shortcut. Ditto for maximize and minimize. This repo contains a set of utilities for Toggling maximize, Show desktop and snapping windows at half width to left or right. 
+Some WMs do not come with a toggle desktop shortcut. Ditto for maximize and minimize. This repo contains a set of utilities for:
+1. Toggling maximize
+2. Show desktop
+3. Snap windows at half width to left or right. 
 
 ### Run-or-raise
 How many times have you navigated through countless open windows with **<Alt>+<Tab>** to get to that Chromium / Firefox ? 
@@ -16,7 +19,7 @@ Inspired by this : [Run-or-raise](https://vickychijwani.github.io/2012/04/15/bla
 You can add it to your $PATH or, if you have root privileges, copy to /usr/local/bin.
 
 
-##Requires:
+### Requires:
 - **wmctrl**
 - **xprop**
 - **xdotool** - A great tool for window and keyboard and mouse input automation
